@@ -1,8 +1,11 @@
 package uk.ac.sheffield.com1003.library;
 
 import uk.ac.sheffield.com1003.library.catalogue.CatalogueItem;
+import uk.ac.sheffield.com1003.library.exceptions.ItemAlreadyReturnedException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Loan {
     
@@ -25,32 +28,58 @@ public class Loan {
      * @param loanLength Number of days the loan is valid for
      */
     public Loan(CatalogueItem item, Person user, int loanLength) {
-        // TODO: Implement
+        // TODO: Implement //DONE
+        this.item = item;
+        this.user = user;
+        this.loanDate = LocalDateTime.now();
+        this.dueDate = LocalDateTime.of(loanDate.toLocalDate().plusDays(loanLength), loanDate.toLocalTime());
+        this.returnedDate = null;
     }
 
+    /**
+     * A getter to get the {@link this#item} on loan.
+     *
+     * @return the actual item on loan.
+     * **/
     public CatalogueItem getItem() {
-        // TODO: Implement
-        return null;
+        return this.item;
     }
 
+    /**
+     * A getter to get the {@link this#user} loaning the item.
+     *
+     * @return the user of type Person loaning the item.
+     * **/
     public Person getUser() {
-        // TODO: Implement
-        return null;
+        return this.user;
     }
 
+    /**
+     * A getter that returns the {@link this#dueDate}.
+     *
+     * @return the date when item was loaned with the time.
+     * **/
     public LocalDateTime getLoanDate() {
-        // TODO: Implement
-        return null;
+        return this.loanDate;
     }
 
+
+    /**
+     * A getter that returns the {@link this#returnedDate}.
+     *
+     * @return the date when the item was returned with the time. If the item was not returned, it returns null.
+     * **/
     public LocalDateTime getReturnedDate() {
-        // TODO: Implement
-        return null;
+        return this.returnedDate;
     }
 
+    /**
+     * A getter that returns the {@link this#dueDate}.
+     *
+     * @return the date which loan is due.
+     * **/
     public LocalDateTime getDueDate() {
-        // TODO: Implement
-        return null;
+        return this.dueDate;
     }
 
     /**
@@ -62,23 +91,37 @@ public class Loan {
      * Thank you!
      */
     public void printReceipt() {
-        // TODO: Implement
+        System.out.println("Loan date: ".concat(getLoanDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss"))));
+        System.out.println(getUser().toString().concat(" has borrowed ")
+                .concat(getItem().getTitle()));
+        System.out.println("Date due: ".concat(getDueDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+        System.out.println("Returned: ".concat(getReturnedDate()==null?"n/a"
+                :getReturnedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss"))));
+        System.out.println("Thank you!");
     }
 
     /**
      * Updates field {@link Loan#returnedDate} with current date and time
      * @throws ItemAlreadyReturnedException if the item was already returned
      */
-    public void returnItem() {
-        // TODO: Implement
+    public void returnItem() throws ItemAlreadyReturnedException{
+        if (getReturnedDate() == null){
+            this.returnedDate = LocalDateTime.now();
+        } else {
+            throw new ItemAlreadyReturnedException();
+        }
     }
 
     /**
      * Extends the loan term by adding the given amount of days to field {@link Loan#dueDate}
      * @throws ItemAlreadyReturnedException if the item was already returned
      */
-    public void extendLoan(int days) {
-        // TODO: Implement
+    public void extendLoan(int days) throws ItemAlreadyReturnedException {
+        if (getReturnedDate() != null) {
+            throw new ItemAlreadyReturnedException();
+        } else {
+            this.dueDate = LocalDateTime.of(getDueDate().toLocalDate().plusDays(days), getDueDate().toLocalTime());
+        }
     }
 
     /**
@@ -89,7 +132,7 @@ public class Loan {
      */
     @Override
     public String toString() {
-        // TODO: Implement
-        return null;
+        return "Loan: User="+getUser()+"; Item="+getItem().getTitle()+"; Type="+getItem().getClass().getSimpleName()+"; " +
+                "Due="+getDueDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 }

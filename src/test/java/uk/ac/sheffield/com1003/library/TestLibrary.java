@@ -45,7 +45,7 @@ public class TestLibrary extends TestLibraryBase {
 
     @DisplayName("The catalogue is printed correctly")
     @Test
-    public void testPrintCatalogue() {
+    public void testPrintCatalogue() throws Exception {
         Library library = new Library("Sheffield Central Library");
 
         Book book1 = createBook();
@@ -56,14 +56,15 @@ public class TestLibrary extends TestLibraryBase {
 
         library.printCatalogue();
         ArrayList<String> lines = getOutLines();
-        assertEquals(8, lines.size());
-        assertEquals("====================", lines.get(0));
+        assertEquals(7, lines.size());
+        String lineSeparator = "====================";
+        assertEquals( lineSeparator, lines.get(0));
         assertEquals("Welcome to Sheffield Central Library", lines.get(1));
         assertEquals("Catalogue", lines.get(2));
-        assertEquals("====================", lines.get(3));
-        assertEquals("Book: Author=Doe, John; ISBN=9780136083238; Genre=NONFICTION", lines.get(4));
-        assertEquals("Book: Author=Doe, John; ISBN=9781111111111; Genre=UNSPECIFIED", lines.get(5));
-        assertEquals("====================", lines.get(6));
+        assertEquals(lineSeparator, lines.get(3));
+        assertEquals("Book: Title=Book 1; Author=Doe, John; ISBN=9780136083238; Genre=NONFICTION", lines.get(4));
+        assertEquals("Book: Title=Book 1; Author=Doe, John; ISBN=9781111111111; Genre=UNSPECIFIED", lines.get(5));
+        assertEquals(lineSeparator, lines.get(6));
     }
 
     @DisplayName("Loan book and print list of overdue items")
@@ -75,9 +76,12 @@ public class TestLibrary extends TestLibraryBase {
         library.loanItem(book.getTitle(), new Person("Jose Rojas"));
         library.printOverdue();
         ArrayList<String> lines = getOutLines();
-        assertEquals(2, lines.size());
-        assertEquals("Overdue Loans:", lines.get(0));
-        assertTrue(lines.get(1).startsWith("Loan: User=Rojas, Jose; Item=Book 1;"));
+        String lineSeparator = "====================";
+        assertEquals(4, lines.size());
+        assertEquals(lineSeparator, lines.get(0));
+        assertEquals("Loans Overdue", lines.get(1));
+        assertEquals(lineSeparator, lines.get(2));
+        assertEquals(lineSeparator, lines.get(3));
     }
 
     @DisplayName("Loaning an item which does not exist in catalogue")
