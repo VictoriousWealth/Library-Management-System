@@ -136,14 +136,14 @@ public class Library {
         // checking if item exist
         if (c == null) {
             System.out.println("Unsuccessful! The item with title or isbn ".concat(titleOrISBN)
-                    .concat(" cannot be added."));
+                    .concat(" cannot be loaned, as it was not found."));
             throw new ItemNotFoundException();
         }
 
         // checking if item cannot be loaned
         if (!c.isAvailable()) {
             System.out.println("Unsuccessful! The item with title or isbn "
-                    .concat(titleOrISBN).concat(" cannot be added."));
+                    .concat(titleOrISBN).concat(" cannot be loaned, as there are no more copies left."));
             throw new NoCopyAvailableException();
         }
 

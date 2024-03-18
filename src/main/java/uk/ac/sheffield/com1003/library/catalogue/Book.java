@@ -186,7 +186,7 @@ public class Book extends CatalogueItem {
 
         // validating entry of certain fields before creating actual book instance.
         if (year.length()!= 4 || isbn.length()!=13 || (!isbn.startsWith("979") && !isbn.startsWith("978"))) {
-            throw new IllegalArgumentException("Invalid BibTex entry");
+            throw new IllegalArgumentException("Invalid BibTex entry due to isbn or year");
         }
         scanner.close();
         return new Book(title, new Person(author), isbn, Integer.parseInt(year));
